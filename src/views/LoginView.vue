@@ -8,16 +8,18 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 export default {
   setup() {
+    const store = useStore();
     const router = useRouter();
     const error = ref(null);
 
     const handleGoogleLogin = async () => {
       try {
-        // user login
+        await store.dispatch("googleLogin");
         router.push("/profile");
       } catch (err) {
         error.value = err.message;

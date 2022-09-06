@@ -1,7 +1,7 @@
 <template>
   <div class="map">
     <h1>Map</h1>
-    <div v-if="authIsReady">
+    <div v-if="authIsReady && user">
       <div v-if="!user.fbAvatar">
         <router-link to="/profile">
           Please bind fb to see more content.
@@ -13,13 +13,16 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   setup() {
+    const store = useStore();
+
     return {
-      user: {
-        email: "test@gmail.com",
-      },
-      authIsReady: true,
+      user: computed(() => store.state.user),
+      authIsReady: computed(() => store.state.authIsReady),
     };
   },
 };

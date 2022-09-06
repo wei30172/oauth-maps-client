@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <h1>Profile</h1>
-    <div v-if="authIsReady">
+    <div v-if="authIsReady && user">
       <div v-if="!user?.fbAvatar">
         <button class="btn" @click="handleFacebookLogin">Bind Facebook</button>
         <p v-if="error">Error: {{ error }}</p>
@@ -19,26 +19,25 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   setup() {
+    const store = useStore();
     const error = ref(null);
 
     const handleFacebookLogin = async () => {
       try {
-        // user bind
+        await store.dispatch("facebookLogin");
       } catch (err) {
         error.value = err.message;
       }
     };
 
     return {
-      user: {
-        email: "test@gmail.com",
-        name: "claire",
-      },
-      authIsReady: true,
+      user: computed(() => store.state.user),
+      authIsReady: computed(() => store.state.authIsReady),
       error,
       handleFacebookLogin,
     };
@@ -52,7 +51,8 @@ export default {
     background-color: #1778f2;
     width: 200px;
   }
-  .img {
+  img {
+    border-radius: 50%;
   }
 }
 </style>

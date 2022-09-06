@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import MenuIcon from "@/features/Icons/MenuIcon.vue";
 import CloseIcon from "@/features/Icons/CloseIcon.vue";
@@ -56,11 +57,12 @@ export default {
   components: { MenuIcon, CloseIcon },
 
   setup() {
+    const store = useStore();
     const router = useRouter();
     const showMobMenu = ref(false);
 
     const handleLogout = async () => {
-      // clean user
+      await store.dispatch("logout");
       router.push("/");
     };
 
@@ -68,11 +70,8 @@ export default {
       showMobMenu.value = !showMobMenu.value;
     };
     return {
-      user: {
-        email: "test@gmail.com",
-      },
-      // user: null,
-      authIsReady: true,
+      user: computed(() => store.state.user),
+      authIsReady: computed(() => store.state.authIsReady),
       showMobMenu,
       handleLogout,
       toggleMenu,
