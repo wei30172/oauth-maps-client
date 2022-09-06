@@ -25,6 +25,9 @@
           <li class="cursor-pointer">
             <router-link to="/map">Map</router-link>
           </li>
+          <li class="cursor-pointer">
+            <router-link to="/profile">Profile</router-link>
+          </li>
           <li>
             <button @click="handleLogout" class="cursor-pointer">Logout</button>
           </li>
@@ -68,6 +71,7 @@ export default {
       user: {
         email: "test@gmail.com",
       },
+      // user: null,
       authIsReady: true,
       showMobMenu,
       handleLogout,
