@@ -1,10 +1,42 @@
 <template>
-  <div class="login">Login</div>
+  <div class="login">
+    <h1>Login</h1>
+    <button class="btn" @click="handleGoogleLogin">Google Login</button>
+    <p v-if="error">Error: {{ error }}</p>
+  </div>
 </template>
 
 <script>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
 export default {
-  name: "LoginView",
-  components: {},
+  setup() {
+    const router = useRouter();
+    const error = ref(null);
+
+    const handleGoogleLogin = async () => {
+      try {
+        // user login
+        router.push("/profile");
+      } catch (err) {
+        error.value = err.message;
+      }
+    };
+
+    return {
+      error,
+      handleGoogleLogin,
+    };
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+.login {
+  .btn {
+    background-color: #de5246;
+    width: 200px;
+  }
+}
+</style>
