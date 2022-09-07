@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar">
-    <div v-if="authIsReady" class="navbar_menu flex">
+    <div class="navbar_menu flex">
       <!-- mobile or pc menu -->
       <ul
         :class="{
@@ -32,7 +32,7 @@
             <button @click="handleLogout" class="cursor-pointer">Logout</button>
           </li>
           <li>
-            <span>Hi, {{ user.email }}</span>
+            <span>Hi, {{ user.name }}</span>
           </li>
         </div>
       </ul>
@@ -52,6 +52,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import MenuIcon from "@/features/Icons/MenuIcon.vue";
 import CloseIcon from "@/features/Icons/CloseIcon.vue";
+import { userLogout } from "@/api/auth";
 
 export default {
   components: { MenuIcon, CloseIcon },
@@ -62,7 +63,8 @@ export default {
     const showMobMenu = ref(false);
 
     const handleLogout = async () => {
-      await store.dispatch("logout");
+      await userLogout();
+      store.commit("setUser", null);
       router.push("/");
     };
 
@@ -71,7 +73,6 @@ export default {
     };
     return {
       user: computed(() => store.state.user),
-      authIsReady: computed(() => store.state.authIsReady),
       showMobMenu,
       handleLogout,
       toggleMenu,

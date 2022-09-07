@@ -1,14 +1,9 @@
 <template>
-  <div class="map">
+  <div class="map flex">
     <h1>Map</h1>
-    <div v-if="authIsReady && user">
-      <div v-if="!user.fbAvatar">
-        <router-link to="/profile">
-          Please bind fb to see more content.
-        </router-link>
-      </div>
-      <div v-else><p>Search</p></div>
-    </div>
+    <router-link to="/profile">
+      Please bind fb to see more content.
+    </router-link>
   </div>
 </template>
 
@@ -22,7 +17,6 @@ export default {
 
     return {
       user: computed(() => store.state.user),
-      authIsReady: computed(() => store.state.authIsReady),
     };
   },
 };
@@ -31,8 +25,13 @@ export default {
 <style lang="scss" scoped>
 @use "../styles/mixin/colors" as colors;
 .map {
+  flex-direction: column;
+  gap: 2rem;
   a {
     color: colors.$text-primary;
+    &:hover {
+      border-bottom: 2px solid colors.$text-primary;
+    }
   }
 }
 </style>

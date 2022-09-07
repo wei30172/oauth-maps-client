@@ -1,35 +1,19 @@
 <template>
   <div class="login">
     <h1>Login</h1>
-    <button class="btn" @click="handleGoogleLogin">Google Login</button>
-    <p v-if="error">Error: {{ error }}</p>
+    <a class="btn" :href="href">Google Login</a>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import getGoogleOAuthURL from "@/utils/getGoogleUrl";
 
 export default {
   setup() {
-    const store = useStore();
-    const router = useRouter();
-    const error = ref(null);
+    const href = ref(getGoogleOAuthURL());
 
-    const handleGoogleLogin = async () => {
-      try {
-        await store.dispatch("googleLogin");
-        router.push("/profile");
-      } catch (err) {
-        error.value = err.message;
-      }
-    };
-
-    return {
-      error,
-      handleGoogleLogin,
-    };
+    return { href };
   },
 };
 </script>

@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import MapView from "@/views/MapView.vue";
+import { getLoginUser } from "@/api/auth";
 import store from "@/store";
 
 const routes = [
@@ -42,10 +43,11 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authOnly = to.matched.some((record) => record.meta.auth);
   const guestOnly = to.matched.some((record) => record.meta.guest);
-  const user = store.state.user;
+  const user = await getLoginUser();
+  store.commit("setUser", user);
   if (authOnly) {
     if (!user) {
       next("/login");

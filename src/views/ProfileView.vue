@@ -1,45 +1,45 @@
 <template>
-  <div class="profile">
+  <div class="profile flex">
     <h1>Profile</h1>
-    <div v-if="authIsReady && user">
-      <div v-if="!user?.fbAvatar">
-        <button class="btn" @click="handleFacebookLogin">Bind Facebook</button>
-        <p v-if="error">Error: {{ error }}</p>
-      </div>
-      <div v-else>
-        <img :src="user?.fbAvatar" :alt="user?.name" />
-      </div>
+    <div v-if="user" class="profile_info flex">
+      <a class="btn" :href="href">Bind Facebook</a>
+      <img :src="user.picture" :alt="user.name" />
       <ul>
-        <li v-for="(objKey, index) in Object.keys(user)" :key="index">
-          {{ objKey }}: {{ user[objKey] }}
-        </li>
+        <li>Gmail: {{ user.email }}</li>
+        <li>Google name: {{ user.name }}</li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import getFaceBookOAuthURL from "@/utils/getFaceBookUrl";
+import { getFBInfo } from "@/api/auth";
 
 export default {
   setup() {
     const store = useStore();
-    const error = ref(null);
+    const href = ref(getFaceBookOAuthURL());
 
-    const handleFacebookLogin = async () => {
-      try {
-        await store.dispatch("facebookLogin");
-      } catch (err) {
-        error.value = err.message;
+    onMounted(async () => {
+      const fbinfo = await getFBInfo();
+      console.log(fbinfo);
+
+      if (fbinfo) {
+        const userInfo = {
+          fbName: fbinfo.name,
+          fbEmail: fbinfo.email,
+          fbPicture: fbinfo.picture?.data?.url,
+        };
+        store.commit("setUser", userInfo);
       }
-    };
+    });
 
     return {
       user: computed(() => store.state.user),
-      authIsReady: computed(() => store.state.authIsReady),
-      error,
-      handleFacebookLogin,
+      href,
     };
   },
 };
@@ -47,12 +47,18 @@ export default {
 
 <style lang="scss" scoped>
 .profile {
-  .btn {
-    background-color: #1778f2;
-    width: 200px;
-  }
-  img {
-    border-radius: 50%;
+  flex-direction: column;
+  gap: 2rem;
+  .profile_info {
+    flex-direction: column;
+    gap: 1rem;
+    .btn {
+      background-color: #1778f2;
+      width: 200px;
+    }
+    img {
+      border-radius: 50%;
+    }
   }
 }
 </style>
