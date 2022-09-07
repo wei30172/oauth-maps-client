@@ -1,4 +1,4 @@
-# vue-oauth-map
+# oauth-maps-client
 
 ## Project setup
 ```
