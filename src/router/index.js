@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import MapView from "@/views/MapView.vue";
+import EmptyView from "@/views/EmptyView.vue";
 import { getLoginUser } from "@/api/auth";
 import store from "@/store";
 
@@ -35,6 +36,11 @@ const routes = [
     meta: {
       auth: true,
     },
+  },
+  {
+    path: "/empty",
+    name: "empty",
+    component: EmptyView,
   },
 ];
 

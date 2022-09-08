@@ -17,3 +17,9 @@ export const userLogout = async () => {
   await axiosPrivate.get(`auth/logout`);
   return;
 };
+
+// user unbind
+export const userUnbind = async () => {
+  await axiosPrivate.get(`auth/unbind`);
+  return;
+};
