@@ -1,5 +1,5 @@
 <template>
-  <div class="home"><h1>Home</h1></div>
+  <div class="home flex"><h1>Home</h1></div>
 </template>
 
 <script>
@@ -8,3 +8,9 @@ export default {
   components: {},
 };
 </script>
+
+<style lang="scss" scoped>
+.home {
+  flex-direction: column;
+}
+</style>
