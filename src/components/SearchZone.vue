@@ -4,7 +4,7 @@
       <input
         class="search-input"
         type="text"
-        placeholder="Enter your address or leave it empty to get your current position."
+        placeholder="Enter the address or leave it empty to get your current position."
         v-model="queryIp"
       />
       <div
