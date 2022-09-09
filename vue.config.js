@@ -5,7 +5,7 @@ module.exports = defineConfig({
   outputDir: path.resolve(__dirname, "../oauth-maps-server/public"),
   devServer: {
     proxy: {
-      "/auth": {
+      "/api": {
         target: "http://localhost:3000",
       },
     },
