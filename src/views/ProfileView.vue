@@ -76,11 +76,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use "../styles/mixin/colors" as colors;
 .profile {
   flex-direction: column;
   gap: 2rem;
   .btn {
-    background-color: #1778f2;
+    background-color: colors.$facebook-primary;
     width: 200px;
   }
   img {

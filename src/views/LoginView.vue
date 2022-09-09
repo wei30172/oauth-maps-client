@@ -35,11 +35,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use "../styles/mixin/colors" as colors;
 .login {
   flex-direction: column;
   gap: 2rem;
   .btn {
-    background-color: #de5246;
+    background-color: colors.$google-primary;
     width: 200px;
   }
 }
