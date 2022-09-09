@@ -10,7 +10,7 @@
       <!-- Map -->
       <div id="map"></div>
       <!-- Search -->
-      <SearchZone v-if="fbUserID" @handleClick="getIpInfo" />
+      <SearchZone v-if="fbUserID" @handleClick="handleSearch" />
       <!-- IP Info -->
       <IPInfo v-if="ipInfo" :ipInfo="ipInfo" />
     </section>
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import leaflet from "leaflet";
-import axios from "axios";
+import L from "leaflet";
 import { ref, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { getFBInfo } from "@/api/auth";
+import { getUrbanRenewalData, getUrbanRenewalPolygenData } from "@/api/city";
 import SearchZone from "@/components/SearchZone";
 import IPInfo from "@/components/IPInfo";
 
@@ -30,52 +30,116 @@ export default {
   components: { SearchZone, IPInfo },
   setup() {
     const store = useStore();
-    const fbUserID = ref(null);
-    let map;
+    let fbUserID = ref(null);
     let ipInfo = ref(null);
+    let map;
+    let center = [25.012, 121.4645]; // New Taipei City Hall
+    let zoom = 17; // 0 - 18
 
-    const getId = async () => {
+    onMounted(async () => {
+      try {
+        // create the map
+        map = L.map("map").setView(center, zoom);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap",
+          zoomControl: true, // show - + button
+        }).addTo(map);
+
+        // get current position
+        let position = await getPosition();
+        if (position) center = position;
+        createUsermarker();
+        // add markers to map
+        const resultData = await getUrbanRenewalData();
+        addMarkertoMap(resultData);
+
+        // add polygen data to Map
+        const resultPolygenData = await getUrbanRenewalPolygenData();
+        polygenDatatoMap(resultPolygenData);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    // get facebook id
+    const getFacebookId = async () => {
       const info = await getFBInfo();
       if (info) fbUserID.value = info.id;
     };
-    getId();
+    getFacebookId();
 
-    // creates the map
-    onMounted(() => {
-      const maptilerurl =
-        "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3M3Hd2D6IxuQIX5M1hu1";
+    // get geolocation
+    const getCurrentPosition = () => {
+      return new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      );
+    };
 
-      const attribution =
-        '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e';
-
-      map = leaflet.map("map").setView([23.6978, 120.9605], 5);
-      leaflet
-        .tileLayer(maptilerurl, {
-          tileSize: 512,
-          zoomOffset: -1,
-          minZoom: 1,
-          attribution: attribution,
-          crossOrigin: true,
-        })
-        .addTo(map);
-    });
-
-    // gets ip information from API
-    const getIpInfo = async (queryIp) => {
+    // get current position
+    const getPosition = async () => {
       try {
-        const geourl = `https://geo.ipify.org/api/v1?apiKey=${process.env.VUE_APP_MAPS_APIKEY}&ipAddress=${queryIp}`;
+        let { coords } = await getCurrentPosition();
+        return [coords.latitude, coords.longitude];
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    };
 
-        const { data } = await axios.get(geourl);
-        ipInfo.value = {
-          address: data.ip,
-          state: data.location.region,
-          timezone: data.location.timezone,
-          isp: data.isp,
-          lat: data.location.lat,
-          lng: data.location.lng,
-        };
-        leaflet.marker([ipInfo.value.lat, ipInfo.value.lng]).addTo(map);
-        map.setView([ipInfo.value.lat, ipInfo.value.lng], 13);
+    // create marker
+    const createUsermarker = async () => {
+      const marker = L.marker(center, {
+        title: center,
+      }).addTo(map);
+
+      // create marker img div
+      const imgDiv = document.createElement("div");
+
+      // get fb picture
+      const fbPicture = new Image(100, 100);
+      fbPicture.src = `https://graph.facebook.com/${fbUserID.value}/picture?type=large`;
+      imgDiv.appendChild(fbPicture);
+
+      // get google picture
+      const googlePicture = new Image(100, 100);
+      googlePicture.src = store.state.user?.picture;
+      imgDiv.appendChild(googlePicture);
+
+      marker
+        .bindTooltip(imgDiv, {
+          permanent: true,
+        })
+        .openTooltip();
+      map.setView(center, zoom);
+    };
+
+    // add polygen data to Map
+    const polygenDatatoMap = (data) => {
+      L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup(`<b>Name: </b>${feature.properties.name}`);
+        },
+      }).addTo(map);
+    };
+
+    // add markers to map
+    const addMarkertoMap = (data) => {
+      for (let m of data) {
+        L.marker([m.latitude, m.longitude]).addTo(map);
+      }
+    };
+
+    // get position information
+    const findNearbyPlaces = async (queryIp) => {
+      console.log(queryIp);
+      // getQueryPosition(queryIp);
+    };
+
+    // get position information ,create marker, and add polygen data to Map
+    const handleSearch = async (queryIp) => {
+      try {
+        // get position information
+        await findNearbyPlaces(queryIp);
       } catch (err) {
         alert(err.message);
       }
@@ -85,7 +149,7 @@ export default {
       user: computed(() => store.state.user),
       fbUserID,
       ipInfo,
-      getIpInfo,
+      handleSearch,
     };
   },
 };
