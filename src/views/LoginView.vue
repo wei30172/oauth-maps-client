@@ -1,19 +1,35 @@
 <template>
   <div class="login flex">
     <h1>Login</h1>
+    <!-- error alert -->
+    <ToastAlert v-if="errorMsg">
+      <p>{{ errorMsg }}</p>
+    </ToastAlert>
+    <!-- login button -->
     <a class="btn" :href="href">Google Login</a>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+import ToastAlert from "@/components/ToastAlert.vue";
 import getGoogleOAuthURL from "@/utils/getGoogleUrl";
 
 export default {
+  components: { ToastAlert },
   setup() {
+    const route = useRoute();
     const href = ref(getGoogleOAuthURL());
+    const errorMsg = ref(route.query.errorMsg);
 
-    return { href };
+    watchEffect(() => {
+      setTimeout(() => {
+        errorMsg.value = null;
+      }, 2000);
+    });
+
+    return { href, errorMsg };
   },
 };
 </script>

@@ -1,6 +1,11 @@
 <template>
   <div class="profile flex">
     <h1>Profile</h1>
+    <!-- error alert -->
+    <ToastAlert v-if="errorMsg">
+      <p>{{ errorMsg }}</p>
+    </ToastAlert>
+    <!-- profile info -->
     <div class="profile_info flex">
       <img
         v-show="fbUserID"
@@ -23,19 +28,22 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-
+import { useRoute, useRouter } from "vue-router";
+import ToastAlert from "@/components/ToastAlert.vue";
 import getFaceBookOAuthURL from "@/utils/getFaceBookUrl";
 import { getFBInfo, userUnbind } from "@/api/auth";
 
 export default {
+  components: { ToastAlert },
   setup() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const href = ref(getFaceBookOAuthURL());
     const fbUserID = ref(null);
+    const errorMsg = ref(route.query.errorMsg);
 
     const getId = async () => {
       const info = await getFBInfo();
@@ -50,10 +58,17 @@ export default {
       });
     };
 
+    watchEffect(() => {
+      setTimeout(() => {
+        errorMsg.value = null;
+      }, 2000);
+    });
+
     return {
       user: computed(() => store.state.user),
       fbUserID,
       href,
+      errorMsg,
       handleUnbind,
     };
   },
