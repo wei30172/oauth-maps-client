@@ -2,24 +2,40 @@ import { axiosPrivate } from "./axios";
 
 // get user
 export const getLoginUser = async () => {
-  const { data } = await axiosPrivate.get(`api/auth/user`);
-  return data.user;
+  try {
+    const { data } = await axiosPrivate.get(`api/auth/user`);
+    return data.user;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // get fb info
 export const getFBInfo = async () => {
-  const { data } = await axiosPrivate.get(`api/auth/userfb`);
-  return data.fbinfo;
+  try {
+    const { data } = await axiosPrivate.get(`api/auth/userfb`);
+    return data.fbinfo;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // user logout
 export const userLogout = async () => {
-  await axiosPrivate.get(`api/auth/logout`);
-  return;
+  try {
+    await axiosPrivate.get(`api/auth/logout`);
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // user unbind
 export const userUnbind = async () => {
-  await axiosPrivate.get(`api/auth/unbind`);
-  return;
+  try {
+    await axiosPrivate.get(`api/auth/unbind`);
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
