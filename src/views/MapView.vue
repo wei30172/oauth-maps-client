@@ -20,6 +20,7 @@
       :urbanRenewalData="urbanRenewalData"
       @handleClick="createUsermarker"
     />
+    <ScrollTopBtn @handleClick="goToElement" />
   </div>
 </template>
 
@@ -31,10 +32,11 @@ import { getFBInfo } from "@/api/auth";
 import { getUrbanRenewalData, getUrbanRenewalPolygenData } from "@/api/city";
 import SearchInput from "@/components/SearchInput";
 import SearchResult from "@/components/SearchResult";
+import ScrollTopBtn from "@/components/ScrollTopBtn";
 import getFaceBookPicture from "@/utils/getFaceBookPicture";
 
 export default {
-  components: { SearchInput, SearchResult },
+  components: { SearchInput, SearchResult, ScrollTopBtn },
   setup() {
     const store = useStore();
     const searchRef = ref(null);
@@ -170,9 +172,13 @@ export default {
 
 <style lang="scss" scoped>
 @use "../styles/mixin/colors" as colors;
+@use "../styles/mixin/screens" as screens;
 .map {
   flex-direction: column;
   gap: 0.5rem;
+  h1 {
+    font-size: 1.5rem;
+  }
   a {
     text-align: center;
     color: colors.$text-primary;
@@ -198,6 +204,14 @@ export default {
       justify-content: space-between;
       width: 100%;
       background-color: colors.$background-dark;
+    }
+  }
+}
+
+@include screens.tablet {
+  .map {
+    h1 {
+      font-size: 2rem;
     }
   }
 }
