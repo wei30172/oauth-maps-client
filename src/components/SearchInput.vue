@@ -1,16 +1,13 @@
 <template>
   <div class="searchzone">
-    <form @submit.prevent="$emit('searchByKeyword', keyword)" class="flex">
+    <form @submit.prevent="handleSubmit" class="flex">
       <input
         class="search-input"
         type="text"
-        placeholder="請輸入您要查詢的站名"
+        placeholder="請輸入要查詢的站名"
         v-model="keyword"
       />
-      <div
-        class="search-icon cursor-pointer"
-        @click="$emit('searchByKeyword', keyword)"
-      >
+      <div class="search-icon cursor-pointer" @click="handleSubmit">
         <SearchIcon />
       </div>
     </form>
@@ -23,17 +20,23 @@ import SearchIcon from "@/features/Icons/SearchIcon.vue";
 
 export default {
   components: { SearchIcon },
-  setup() {
-    const keyword = ref("");
-    return { keyword };
+  setup(props, { emit }) {
+    const keyword = ref(null);
+    const handleSubmit = () => {
+      emit("searchByKeyword", keyword.value);
+      keyword.value = null;
+    };
+
+    return { keyword, handleSubmit };
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @use "../styles/mixin/_colors.scss" as colors;
+@use "../styles/mixin/screens" as screens;
 .searchzone {
-  width: 60%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -59,6 +62,11 @@ export default {
     height: 3rem;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+  }
+}
+@include screens.tablet {
+  .searchzone {
+    width: 60%;
   }
 }
 </style>
