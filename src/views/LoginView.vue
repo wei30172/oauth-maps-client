@@ -1,10 +1,11 @@
 <template>
   <div class="login flex">
     <h1>Login</h1>
-    <!-- error alert -->
-    <ToastAlert v-if="errorMsg">
+    <!-- alert -->
+    <ToastAlert v-if="errorMsg" type="error">
       <p>{{ errorMsg }}</p>
     </ToastAlert>
+
     <!-- login button -->
     <a class="btn" :href="href">Google Login</a>
   </div>

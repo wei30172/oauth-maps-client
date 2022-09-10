@@ -1,8 +1,8 @@
 <template>
   <div class="profile flex">
     <h1>Profile</h1>
-    <!-- error alert -->
-    <ToastAlert v-if="errorMsg">
+    <!-- alert -->
+    <ToastAlert v-if="errorMsg" type="error">
       <p>{{ errorMsg }}</p>
     </ToastAlert>
     <!-- profile info -->
