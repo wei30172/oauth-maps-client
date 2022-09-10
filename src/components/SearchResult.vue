@@ -1,6 +1,6 @@
 <template>
   <div class="searchresult">
-    <ul v-if="paginatedData.length > 0">
+    <ul v-if="paginatedData.length">
       <li v-for="info in paginatedData" :key="info.id">
         <SearchResultInfo
           :info="info"

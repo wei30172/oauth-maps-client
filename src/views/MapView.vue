@@ -1,5 +1,13 @@
 <template>
   <div class="map flex">
+    <!-- loading -->
+    <LoadingModal v-if="loading" />
+
+    <!-- alert -->
+    <ToastAlert v-if="alertMsg">
+      <p>{{ alertMsg }}</p>
+    </ToastAlert>
+
     <!-- bind Facebook link -->
     <router-link v-if="!fbUserID" to="/profile">
       <h1>綁定Facebook以查看更多內容</h1>
@@ -13,7 +21,7 @@
       <div v-if="fbUserID" class="search" ref="searchRef">
         <div class="flex">
           <SearchInput @searchByKeyword="searchByKeyword" />
-          <button class="cursor-pointer" @click="() => searchByKeyword()">
+          <button class="cursor-pointer" @click="searchByKeyword()">
             <p>清除搜尋 {{ searchKeyword }}</p>
           </button>
         </div>
@@ -36,26 +44,37 @@
 
 <script>
 import L from "leaflet";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { getFBInfo } from "@/api/auth";
 import { getUrbanRenewalData, getUrbanRenewalPolygenData } from "@/api/city";
+import LoadingModal from "@/components/LoadingModal";
 import SearchInput from "@/components/SearchInput";
 import SearchResult from "@/components/SearchResult";
 import Pagination from "@/components/CustomPagination";
+import ToastAlert from "@/components/ToastAlert.vue";
 import ScrollTopBtn from "@/components/ScrollTopBtn";
 import getFaceBookPicture from "@/utils/getFaceBookPicture";
 
 export default {
-  components: { SearchInput, SearchResult, Pagination, ScrollTopBtn },
+  components: {
+    LoadingModal,
+    SearchInput,
+    SearchResult,
+    Pagination,
+    ToastAlert,
+    ScrollTopBtn,
+  },
   setup() {
     const store = useStore();
     const searchRef = ref(null);
     let fbUserID = ref(null);
+    let loading = ref(false);
+    let alertMsg = ref(null);
     let urbanRenewalData = ref([]);
     let filteredurbanRenewalData = ref([]);
     let paginatedData = ref([]);
-    let searchKeyword = ref("");
+    let searchKeyword = ref(null);
     let map;
     let center = [24.972663, 121.443671]; // Tucheng
     let zoom = 17; // 0 - 18
@@ -72,6 +91,8 @@ export default {
 
         if (fbUserID.value) createUsermarker();
 
+        loading.value = true;
+
         // add markers to map
         const data = await getUrbanRenewalData();
         urbanRenewalData.value = data;
@@ -81,6 +102,8 @@ export default {
         // add polygen data to Map
         const polygenData = await getUrbanRenewalPolygenData();
         polygenDatatoMap(polygenData);
+
+        loading.value = false;
       } catch (error) {
         console.log(error);
       }
@@ -115,13 +138,15 @@ export default {
     // search by keyword
     const searchByKeyword = (keyword) => {
       goToElement(searchRef.value);
+      searchKeyword.value = keyword;
       if (keyword) {
-        searchKeyword.value = keyword;
         filteredurbanRenewalData.value = urbanRenewalData.value.filter((data) =>
           data.stop_name.includes(keyword)
         );
+        if (!filteredurbanRenewalData.value.length) {
+          alertMsg.value = "沒有符合的資料";
+        }
       } else {
-        searchKeyword.value = "";
         filteredurbanRenewalData.value = urbanRenewalData.value;
       }
     };
@@ -181,10 +206,21 @@ export default {
       window.scrollTo(0, top);
     };
 
+    watch(
+      () => alertMsg.value,
+      () => {
+        setTimeout(() => {
+          alertMsg.value = null;
+        }, 1500);
+      }
+    );
+
     return {
       user: computed(() => store.state.user),
       searchRef,
       fbUserID,
+      loading,
+      alertMsg,
       urbanRenewalData,
       filteredurbanRenewalData,
       paginatedData,
@@ -203,7 +239,6 @@ export default {
 @use "../styles/mixin/screens" as screens;
 .map {
   flex-direction: column;
-  gap: 0.5rem;
   h1 {
     font-size: 1.5rem;
   }
@@ -220,7 +255,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 80vh;
+    height: 75vh;
     #map {
       margin-top: 1rem;
       width: 100%;
@@ -237,7 +272,8 @@ export default {
         background-color: transparent;
         color: colors.$white;
         &:hover {
-          border-bottom: 1px solid colors.$white;
+          color: colors.$danger-background;
+          border-bottom: 1px solid colors.$danger-background;
         }
       }
     }
@@ -252,6 +288,9 @@ export default {
     .search {
       flex-direction: row;
       justify-content: space-between;
+      button {
+        font-size: 1.2rem;
+      }
     }
   }
 }
