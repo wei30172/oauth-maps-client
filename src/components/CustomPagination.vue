@@ -1,11 +1,11 @@
 <template>
-  <div v-if="dataList.length !== 0" class="pagination flex">
+  <div v-if="dataList.length" class="pagination flex">
     <button @click="backPage">prev</button>
     <div class="flex pagination_page">
       <button
         v-for="(item, index) in Math.ceil(dataList.length / perPage)"
         :key="item"
-        @click="() => goToPage(item)"
+        @click="goToPage(item)"
         :class="{ active: page === index + 1 }"
       >
         {{ item }}
@@ -14,8 +14,9 @@
     <button @click="nextPage">next</button>
   </div>
 </template>
+
 <script>
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watchEffect, watch } from "vue";
 
 export default {
   props: ["dataList"],
@@ -42,6 +43,11 @@ export default {
     const goToPage = (numPage) => {
       page.value = numPage;
     };
+
+    watch(
+      () => props.dataList,
+      () => (page.value = 1)
+    );
 
     watchEffect(() => {
       emit("getPaginatedData", paginatedData.value);
