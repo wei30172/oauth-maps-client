@@ -9,7 +9,7 @@
     <div class="profile_info flex">
       <img
         v-show="fbUserID"
-        :src="`https://graph.facebook.com/${fbUserID}/picture?type=large`"
+        :src="getFaceBookPicture(fbUserID)"
         alt="userpicture"
       />
       <button v-if="fbUserID" class="btn" @click="handleUnbind">
@@ -32,8 +32,9 @@ import { ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import ToastAlert from "@/components/ToastAlert.vue";
-import getFaceBookOAuthURL from "@/utils/getFaceBookUrl";
 import { getFBInfo, userUnbind } from "@/api/auth";
+import getFaceBookOAuthURL from "@/utils/getFaceBookUrl";
+import getFaceBookPicture from "@/utils/getFaceBookPicture";
 
 export default {
   components: { ToastAlert },
@@ -70,6 +71,7 @@ export default {
       href,
       errorMsg,
       handleUnbind,
+      getFaceBookPicture,
     };
   },
 };
