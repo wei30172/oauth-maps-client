@@ -120,7 +120,7 @@ export default {
     top: 0;
     right: 0;
     padding-top: 5rem;
-    background-color: #16161695;
+    background-color: colors.$background-dark-opacity;
     color: colors.$white;
     display: flex;
     flex-direction: column;

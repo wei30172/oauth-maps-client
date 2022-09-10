@@ -20,7 +20,7 @@ export default {
 .loading-modal {
   flex-direction: column;
   z-index: 99;
-  background-color: #16161695;
+  background-color: colors.$background-dark-opacity;
   position: absolute;
   width: 100%;
   height: 100vh;
