@@ -1,7 +1,7 @@
 <template>
-  <div class="searchresult cursor-pointer">
+  <div class="searchresult">
     <ul>
-      <li v-for="info in urbanRenewalData" :key="info.id">
+      <li v-for="info in paginatedData" :key="info.id">
         <SearchResultInfo
           :info="info"
           @click="$emit('handleClick', [info.latitude, info.longitude])"
@@ -15,7 +15,7 @@
 import SearchResultInfo from "@/components/SearchResultInfo";
 
 export default {
-  props: ["urbanRenewalData"],
+  props: ["paginatedData"],
   components: { SearchResultInfo },
 };
 </script>

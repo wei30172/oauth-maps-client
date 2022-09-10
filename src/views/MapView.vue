@@ -12,12 +12,20 @@
       <!-- Search Zone-->
       <div class="search" ref="searchRef">
         <SearchInput v-if="fbUserID" @handleClick="searchByKeyword" />
+        <Pagination
+          :dataList="
+            filteredurbanRenewalData.length > 0
+              ? filteredurbanRenewalData
+              : urbanRenewalData
+          "
+          @handleClick="getPaginatedData"
+        />
       </div>
     </section>
 
     <!-- Search Result-->
     <SearchResult
-      :urbanRenewalData="urbanRenewalData"
+      :paginatedData="paginatedData"
       @handleClick="createUsermarker"
     />
     <ScrollTopBtn @handleClick="goToElement" />
@@ -32,16 +40,19 @@ import { getFBInfo } from "@/api/auth";
 import { getUrbanRenewalData, getUrbanRenewalPolygenData } from "@/api/city";
 import SearchInput from "@/components/SearchInput";
 import SearchResult from "@/components/SearchResult";
+import Pagination from "@/components/CustomPagination";
 import ScrollTopBtn from "@/components/ScrollTopBtn";
 import getFaceBookPicture from "@/utils/getFaceBookPicture";
 
 export default {
-  components: { SearchInput, SearchResult, ScrollTopBtn },
+  components: { SearchInput, SearchResult, Pagination, ScrollTopBtn },
   setup() {
     const store = useStore();
     const searchRef = ref(null);
     let fbUserID = ref(null);
     let urbanRenewalData = ref([]);
+    let filteredurbanRenewalData = ref([]);
+    let paginatedData = ref([]);
     let map;
     let center = [24.972663, 121.443671]; // Tucheng
     let zoom = 17; // 0 - 18
@@ -101,7 +112,9 @@ export default {
     const searchByKeyword = (keyword) => {
       goToElement(searchRef.value);
       try {
-        console.log(keyword);
+        filteredurbanRenewalData.value = urbanRenewalData.value.filter((data) =>
+          data.stop_name.includes(keyword)
+        );
       } catch (err) {
         alert(err.message);
       }
@@ -147,6 +160,11 @@ export default {
       map.setView(center, zoom);
     };
 
+    const getPaginatedData = (data) => {
+      paginatedData.value = data;
+      goToElement(searchRef.value);
+    };
+
     // go to element by ref
     const goToElement = (ref) => {
       let top = 0;
@@ -162,9 +180,12 @@ export default {
       searchRef,
       fbUserID,
       urbanRenewalData,
+      filteredurbanRenewalData,
+      paginatedData,
       searchByKeyword,
       createUsermarker,
       goToElement,
+      getPaginatedData,
     };
   },
 };
@@ -201,7 +222,8 @@ export default {
     }
     .search {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       width: 100%;
       background-color: colors.$background-dark;
     }
@@ -212,6 +234,10 @@ export default {
   .map {
     h1 {
       font-size: 2rem;
+    }
+    .search {
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 }

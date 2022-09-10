@@ -1,5 +1,5 @@
 <template>
-  <div class="info flex box-shadow">
+  <div class="info flex cursor-pointer box-shadow">
     <div class="info-item">
       <h3>{{ info.stop_name }}</h3>
       <span>【{{ info.latitude }}, {{ info.longitude }}】</span>
@@ -30,6 +30,9 @@ export default {
       font-size: 1.5rem;
       margin-right: 0.5rem;
     }
+  }
+  &:hover {
+    background-color: colors.$background-light;
   }
 }
 </style>
