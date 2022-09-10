@@ -25,14 +25,17 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: ProfileView,
+    meta: {
+      auth: true,
+    },
   },
   {
     path: "/map",
     name: "map",
     component: MapView,
-    // meta: {
-    //   auth: true,
-    // },
+    meta: {
+      auth: true,
+    },
   },
   {
     path: "/empty",
