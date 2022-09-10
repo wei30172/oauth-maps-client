@@ -41,7 +41,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   position: relative;
-  padding: 1rem;
+  padding: 0.5rem;
   form {
     width: 100%;
   }
@@ -50,7 +50,7 @@ export default {
     max-width: 760px;
     display: flex;
     flex: 1 1 0%;
-    padding: 1rem;
+    padding: 0.8rem;
     background-color: colors.$white;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
@@ -58,8 +58,8 @@ export default {
   .search-icon {
     background-color: colors.$primary;
     color: colors.$white;
-    width: 3rem;
-    height: 3rem;
+    width: 2.7rem;
+    height: 2.7rem;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
   }

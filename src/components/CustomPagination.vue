@@ -63,14 +63,15 @@ export default {
 .pagination {
   background-color: colors.$background-dark;
   color: colors.$white;
-  padding: 0.5rem 1rem;
+  padding: 0rem 1rem 0.5rem;
+  gap: 1rem;
   button {
     font-size: 1rem;
     font-weight: bold;
     background-color: transparent;
     color: colors.$white;
-    padding: 0.5rem;
-    margin: 0.1rem;
+    padding: 0.2rem 0.5rem;
+    margin: 0.2rem;
     border: 1px solid colors.$white;
     border-radius: 10%;
     cursor: pointer;

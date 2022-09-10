@@ -25,10 +25,12 @@
             <p>清除搜尋 {{ searchKeyword }}</p>
           </button>
         </div>
-        <Pagination
-          :dataList="filteredurbanRenewalData"
-          @getPaginatedData="getPaginatedData"
-        />
+        <div class="pagination-container">
+          <Pagination
+            :dataList="filteredurbanRenewalData"
+            @getPaginatedData="getPaginatedData"
+          />
+        </div>
       </div>
     </section>
 
@@ -238,6 +240,9 @@ export default {
 @use "../styles/mixin/colors" as colors;
 @use "../styles/mixin/screens" as screens;
 .map {
+  display: flex;
+  align-items: center;
+  justify-content: start;
   flex-direction: column;
   h1 {
     font-size: 1.5rem;
@@ -255,7 +260,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 75vh;
+    height: 85vh;
     #map {
       margin-top: 1rem;
       width: 100%;
@@ -275,6 +280,9 @@ export default {
           color: colors.$danger-background;
           border-bottom: 1px solid colors.$danger-background;
         }
+      }
+      .pagination-container {
+        min-height: 40px;
       }
     }
   }
