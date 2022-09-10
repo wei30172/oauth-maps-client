@@ -1,15 +1,15 @@
 <template>
   <div class="searchzone">
-    <form @submit.prevent="$emit('handleClick', queryIp)" class="flex">
+    <form @submit.prevent="$emit('handleClick', keyword)" class="flex">
       <input
         class="search-input"
         type="text"
-        placeholder="Enter the address or leave it empty to get your current position."
-        v-model="queryIp"
+        placeholder="請輸入您要查詢的捷運站名"
+        v-model="keyword"
       />
       <div
         class="search-icon cursor-pointer"
-        @click="$emit('handleClick', queryIp)"
+        @click="$emit('handleClick', keyword)"
       >
         <SearchIcon />
       </div>
@@ -24,8 +24,8 @@ import SearchIcon from "@/features/Icons/SearchIcon.vue";
 export default {
   components: { SearchIcon },
   setup() {
-    const queryIp = ref("");
-    return { queryIp };
+    const keyword = ref("");
+    return { keyword };
   },
 };
 </script>
@@ -39,7 +39,6 @@ export default {
   justify-content: center;
   position: relative;
   padding: 1rem;
-  background-color: colors.$background-dark;
   form {
     width: 100%;
   }
