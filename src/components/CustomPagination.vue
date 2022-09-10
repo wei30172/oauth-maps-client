@@ -44,7 +44,7 @@ export default {
     };
 
     watchEffect(() => {
-      emit("handleClick", paginatedData.value);
+      emit("getPaginatedData", paginatedData.value);
     });
     return { perPage, page, nextPage, backPage, goToPage };
   },

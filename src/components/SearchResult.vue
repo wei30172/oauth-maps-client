@@ -1,10 +1,10 @@
 <template>
   <div class="searchresult">
-    <ul>
+    <ul v-if="paginatedData.length > 0">
       <li v-for="info in paginatedData" :key="info.id">
         <SearchResultInfo
           :info="info"
-          @click="$emit('handleClick', [info.latitude, info.longitude])"
+          @click="$emit('createUsermarker', [info.latitude, info.longitude])"
         />
       </li>
     </ul>

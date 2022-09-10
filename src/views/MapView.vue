@@ -10,25 +10,27 @@
       <!-- Map -->
       <div id="map"></div>
       <!-- Search Zone-->
-      <div class="search" ref="searchRef">
-        <SearchInput v-if="fbUserID" @handleClick="searchByKeyword" />
+      <div v-if="fbUserID" class="search" ref="searchRef">
+        <div class="flex">
+          <SearchInput @searchByKeyword="searchByKeyword" />
+          <button class="cursor-pointer" @click="() => searchByKeyword()">
+            <p>清除搜尋 {{ searchKeyword }}</p>
+          </button>
+        </div>
         <Pagination
-          :dataList="
-            filteredurbanRenewalData.length > 0
-              ? filteredurbanRenewalData
-              : urbanRenewalData
-          "
-          @handleClick="getPaginatedData"
+          :dataList="filteredurbanRenewalData"
+          @getPaginatedData="getPaginatedData"
         />
       </div>
     </section>
 
     <!-- Search Result-->
     <SearchResult
+      v-if="fbUserID"
       :paginatedData="paginatedData"
-      @handleClick="createUsermarker"
+      @createUsermarker="createUsermarker"
     />
-    <ScrollTopBtn @handleClick="goToElement" />
+    <ScrollTopBtn @goToElement="goToElement" />
   </div>
 </template>
 
@@ -53,6 +55,7 @@ export default {
     let urbanRenewalData = ref([]);
     let filteredurbanRenewalData = ref([]);
     let paginatedData = ref([]);
+    let searchKeyword = ref("");
     let map;
     let center = [24.972663, 121.443671]; // Tucheng
     let zoom = 17; // 0 - 18
@@ -72,6 +75,7 @@ export default {
         // add markers to map
         const data = await getUrbanRenewalData();
         urbanRenewalData.value = data;
+        filteredurbanRenewalData.value = data;
         addMarkerstoMap(urbanRenewalData.value);
 
         // add polygen data to Map
@@ -111,12 +115,14 @@ export default {
     // search by keyword
     const searchByKeyword = (keyword) => {
       goToElement(searchRef.value);
-      try {
+      if (keyword) {
+        searchKeyword.value = keyword;
         filteredurbanRenewalData.value = urbanRenewalData.value.filter((data) =>
           data.stop_name.includes(keyword)
         );
-      } catch (err) {
-        alert(err.message);
+      } else {
+        searchKeyword.value = "";
+        filteredurbanRenewalData.value = urbanRenewalData.value;
       }
     };
 
@@ -182,6 +188,7 @@ export default {
       urbanRenewalData,
       filteredurbanRenewalData,
       paginatedData,
+      searchKeyword,
       searchByKeyword,
       createUsermarker,
       goToElement,
@@ -226,6 +233,13 @@ export default {
       justify-content: center;
       width: 100%;
       background-color: colors.$background-dark;
+      button {
+        background-color: transparent;
+        color: colors.$white;
+        &:hover {
+          border-bottom: 1px solid colors.$white;
+        }
+      }
     }
   }
 }

@@ -1,15 +1,15 @@
 <template>
   <div class="searchzone">
-    <form @submit.prevent="$emit('handleClick', keyword)" class="flex">
+    <form @submit.prevent="$emit('searchByKeyword', keyword)" class="flex">
       <input
         class="search-input"
         type="text"
-        placeholder="請輸入您要查詢的捷運站名"
+        placeholder="請輸入您要查詢的站名"
         v-model="keyword"
       />
       <div
         class="search-icon cursor-pointer"
-        @click="$emit('handleClick', keyword)"
+        @click="$emit('searchByKeyword', keyword)"
       >
         <SearchIcon />
       </div>
@@ -33,7 +33,7 @@ export default {
 <style lang="scss" scoped>
 @use "../styles/mixin/_colors.scss" as colors;
 .searchzone {
-  width: 100%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,6 +1,6 @@
 <template>
   <div class="scrolltop-container">
-    <div class="scrolltop-btn" @click="$emit('handleClick')">
+    <div class="scrolltop-btn" @click="$emit('goToElement')">
       <div className="scrolltop-btn_icon">
         <i className="arrow-up"></i>
       </div>
