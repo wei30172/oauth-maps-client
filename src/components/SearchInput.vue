@@ -11,7 +11,7 @@
 
       <!-- search icon -->
       <div class="search-icon cursor-pointer" @click="handleSubmit">
-        <SearchIcon />
+        <img src="@/assets/icon-search.svg" />
       </div>
     </form>
   </div>
@@ -19,10 +19,8 @@
 
 <script>
 import { ref } from "vue";
-import SearchIcon from "@/features/Icons/SearchIcon.vue";
 
 export default {
-  components: { SearchIcon },
   setup(props, { emit }) {
     const keyword = ref(null);
     const handleSubmit = () => {

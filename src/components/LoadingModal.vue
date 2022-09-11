@@ -1,16 +1,12 @@
 <template>
   <div class="loading-modal page-flex">
-    <LoadingIcon class="loading_icon" />
+    <img src="@/assets/icon-loading.svg" class="loading_icon" />
     <h1>Loading...</h1>
   </div>
 </template>
 
 <script>
-import LoadingIcon from "@/features/Icons/LoadingIcon.vue";
-
 export default {
-  components: { LoadingIcon },
-
   props: ["type"],
 };
 </script>

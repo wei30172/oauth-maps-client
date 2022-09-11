@@ -39,8 +39,16 @@
 
       <!-- hamburger -->
       <div @click="toggleMenu" class="navbar_hamburger">
-        <CloseIcon class="navbar_icon cursor-pointer" v-if="showMobMenu" />
-        <MenuIcon class="navbar_icon cursor-pointer" v-else />
+        <img
+          src="@/assets/icon-close.svg"
+          class="navbar_icon cursor-pointer"
+          v-if="showMobMenu"
+        />
+        <img
+          src="@/assets/icon-menu.svg"
+          class="navbar_icon cursor-pointer"
+          v-else
+        />
       </div>
     </div>
   </nav>
@@ -50,13 +58,9 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import MenuIcon from "@/features/Icons/MenuIcon.vue";
-import CloseIcon from "@/features/Icons/CloseIcon.vue";
 import { userLogout } from "@/api/auth";
 
 export default {
-  components: { MenuIcon, CloseIcon },
-
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -143,9 +147,6 @@ export default {
       right: 12px;
       width: 20px;
       height: 20px;
-      &:hover {
-        color: colors.$secondary;
-      }
     }
   }
   .navbar_hidden {

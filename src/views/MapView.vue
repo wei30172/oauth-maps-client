@@ -129,9 +129,15 @@ export default {
 
     // add markers to map
     const addMarkerstoMap = (data) => {
+      const blueMarker = L.icon({
+        iconUrl: require("@/assets/marker-blue.svg"),
+        iconSize: [30, 30],
+      });
+
       for (let m of data) {
         const marker = L.marker([m.latitude, m.longitude], {
           title: m.stop_name,
+          icon: blueMarker,
         }).addTo(map);
         marker.bindPopup(`<b>${m.latitude}, ${m.longitude}</b>`);
       }
@@ -166,8 +172,14 @@ export default {
       }
 
       // create current marker
+      const redMarker = L.icon({
+        iconUrl: require("@/assets/marker-red.svg"),
+        iconSize: [30, 30],
+      });
+
       const marker = L.marker(center, {
         title: center,
+        icon: redMarker,
       }).addTo(map);
 
       curMarker = marker;
