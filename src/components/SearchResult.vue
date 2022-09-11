@@ -1,5 +1,6 @@
 <template>
   <div class="searchresult">
+    <!-- search result info -->
     <ul v-if="paginatedData.length">
       <li v-for="info in paginatedData" :key="info.id">
         <SearchResultInfo
@@ -8,6 +9,9 @@
         />
       </li>
     </ul>
+
+    <!-- no data -->
+    <p v-else class="searchresult_none">No data to display.</p>
   </div>
 </template>
 
@@ -24,5 +28,11 @@ export default {
 @use "../styles/mixin/_colors.scss" as colors;
 .searchresult {
   width: 100%;
+  .searchresult_none {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
 }
 </style>

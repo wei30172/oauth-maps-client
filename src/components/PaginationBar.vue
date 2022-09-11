@@ -1,6 +1,9 @@
 <template>
   <div v-if="dataList.length" class="pagination flex">
-    <button @click="backPage">prev</button>
+    <!-- prev -->
+    <button @click="prevPage">prev</button>
+
+    <!-- pages -->
     <div class="flex pagination_page">
       <button
         v-for="(item, index) in Math.ceil(dataList.length / perPage)"
@@ -11,6 +14,8 @@
         {{ item }}
       </button>
     </div>
+
+    <!-- next -->
     <button @click="nextPage">next</button>
   </div>
 </template>
@@ -24,22 +29,26 @@ export default {
     let page = ref(1);
     const perPage = 100;
 
+    // current paginated data
     const paginatedData = computed(() =>
       props.dataList.slice((page.value - 1) * perPage, page.value * perPage)
     );
 
+    // go to the prev page
+    const prevPage = () => {
+      if (page.value !== 1) {
+        page.value -= 1;
+      }
+    };
+
+    // go to the next page
     const nextPage = () => {
       if (page.value < props.dataList.length / perPage) {
         page.value += 1;
       }
     };
 
-    const backPage = () => {
-      if (page.value !== 1) {
-        page.value -= 1;
-      }
-    };
-
+    // go to the current page
     const goToPage = (numPage) => {
       page.value = numPage;
     };
@@ -52,7 +61,7 @@ export default {
     watchEffect(() => {
       emit("getPaginatedData", paginatedData.value);
     });
-    return { perPage, page, nextPage, backPage, goToPage };
+    return { perPage, page, nextPage, prevPage, goToPage };
   },
 };
 </script>

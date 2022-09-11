@@ -1,23 +1,22 @@
 <template>
   <div class="profile flex">
     <h1>Profile</h1>
+
     <!-- alert -->
     <ToastAlert v-if="errorMsg" type="error">
       <p>{{ errorMsg }}</p>
     </ToastAlert>
-    <!-- profile info -->
-    <div class="profile_info flex">
-      <img
-        v-show="fbUserID"
-        :src="getFaceBookPicture(fbUserID)"
-        alt="userpicture"
-      />
-      <button v-if="fbUserID" class="btn" @click="handleUnbind">
-        Unbind Facebook
-      </button>
-      <a v-else class="btn" :href="href">Bind Facebook</a>
+
+    <!-- profile info (facebook) -->
+    <div class="profile_info">
+      <div v-if="fbUserID">
+        <img :src="getFaceBookPicture(fbUserID)" alt="userpicture" />
+        <button class="btn" @click="handleUnbind">Unbind Facebook</button>
+      </div>
+      <div v-else><a class="btn" :href="href">Bind Facebook</a></div>
     </div>
 
+    <!-- profile info (google) -->
     <div v-if="user" class="profile_info flex">
       <ul>
         <li>Gmail: {{ user.email }}</li>
@@ -82,16 +81,22 @@ export default {
 .profile {
   flex-direction: column;
   gap: 2rem;
-  .btn {
-    background-color: colors.$facebook-primary;
-    width: 200px;
-  }
-  img {
-    border-radius: 50%;
-  }
   .profile_info {
     flex-direction: column;
     gap: 1rem;
+    img {
+      border-radius: 50%;
+    }
+    .loading {
+      .loading_icon {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    .btn {
+      background-color: colors.$facebook-primary;
+      width: 200px;
+    }
   }
 }
 </style>

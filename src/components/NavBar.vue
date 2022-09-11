@@ -62,12 +62,14 @@ export default {
     const router = useRouter();
     const showMobMenu = ref(false);
 
+    // logout
     const handleLogout = async () => {
       await userLogout();
       store.commit("setUser", null);
       router.push("/");
     };
 
+    // toggle menu
     const toggleMenu = () => {
       showMobMenu.value = !showMobMenu.value;
     };

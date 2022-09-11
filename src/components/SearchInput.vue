@@ -1,12 +1,15 @@
 <template>
   <div class="searchzone">
     <form @submit.prevent="handleSubmit" class="flex">
+      <!-- input -->
       <input
         class="search-input"
         type="text"
-        placeholder="請輸入要查詢的站名"
+        placeholder="Please enter the name of the station."
         v-model="keyword"
       />
+
+      <!-- search icon -->
       <div class="search-icon cursor-pointer" @click="handleSubmit">
         <SearchIcon />
       </div>

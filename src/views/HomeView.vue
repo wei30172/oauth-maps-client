@@ -2,10 +2,10 @@
   <div class="home flex">
     <h1>新北市都市更新地點查詢</h1>
     <router-link v-if="user" to="/map">
-      <h3>開始查詢</h3>
+      <h3>START</h3>
     </router-link>
     <router-link v-else to="/login">
-      <h3>請先登入</h3>
+      <h3>LOGIN</h3>
     </router-link>
   </div>
 </template>

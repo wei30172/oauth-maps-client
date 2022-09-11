@@ -8,31 +8,31 @@
       <p>{{ alertMsg }}</p>
     </ToastAlert>
 
-    <!-- bind Facebook link -->
-    <router-link v-if="!fbUserID" to="/profile">
-      <h1>綁定Facebook以查看更多內容</h1>
-    </router-link>
-
-    <!-- tracker -->
-    <section class="tracker">
+    <!-- map_search -->
+    <section class="map_content">
       <!-- Map -->
       <div id="map"></div>
-      <!-- Search Zone-->
-      <div v-if="fbUserID" class="search" ref="searchRef">
+      <!-- search input-->
+      <div v-if="fbUserID" class="map_content_search" ref="searchRef">
         <div class="flex">
           <SearchInput @searchByKeyword="searchByKeyword" />
           <button class="cursor-pointer" @click="searchByKeyword()">
             <p>清除搜尋 {{ searchKeyword }}</p>
           </button>
         </div>
-        <div class="pagination-container">
-          <Pagination
+        <div class="map_content_pagination">
+          <PaginationBar
             :dataList="filteredurbanRenewalData"
             @getPaginatedData="getPaginatedData"
           />
         </div>
       </div>
     </section>
+
+    <!-- bind Facebook link -->
+    <router-link v-if="!fbUserID" to="/profile">
+      <h2>Bind your Facebook account to see more.</h2>
+    </router-link>
 
     <!-- Search Result-->
     <SearchResult
@@ -53,7 +53,7 @@ import { getUrbanRenewalData, getUrbanRenewalPolygenData } from "@/api/city";
 import LoadingModal from "@/components/LoadingModal";
 import SearchInput from "@/components/SearchInput";
 import SearchResult from "@/components/SearchResult";
-import Pagination from "@/components/CustomPagination";
+import PaginationBar from "@/components/PaginationBar";
 import ToastAlert from "@/components/ToastAlert.vue";
 import ScrollTopBtn from "@/components/ScrollTopBtn";
 import getFaceBookPicture from "@/utils/getFaceBookPicture";
@@ -63,7 +63,7 @@ export default {
     LoadingModal,
     SearchInput,
     SearchResult,
-    Pagination,
+    PaginationBar,
     ToastAlert,
     ScrollTopBtn,
   },
@@ -77,6 +77,8 @@ export default {
     let filteredurbanRenewalData = ref([]);
     let paginatedData = ref([]);
     let searchKeyword = ref(null);
+
+    // map setting
     let map;
     let center = [24.972663, 121.443671]; // Tucheng
     let zoom = 17; // 0 - 18
@@ -90,8 +92,6 @@ export default {
           attribution: "© OpenStreetMap",
           zoomControl: true, // show - + button
         }).addTo(map);
-
-        if (fbUserID.value) createUsermarker();
 
         loading.value = true;
 
@@ -146,7 +146,7 @@ export default {
           data.stop_name.includes(keyword)
         );
         if (!filteredurbanRenewalData.value.length) {
-          alertMsg.value = "沒有符合的資料";
+          alertMsg.value = "No matching data.";
         }
       } else {
         filteredurbanRenewalData.value = urbanRenewalData.value;
@@ -241,30 +241,20 @@ export default {
 @use "../styles/mixin/screens" as screens;
 .map {
   flex-direction: column;
-  h1 {
-    font-size: 1.5rem;
-  }
-  a {
-    text-align: center;
-    color: colors.$text-primary;
-    &:hover {
-      color: colors.$facebook-primary;
-    }
-  }
-  .tracker {
+  .map_content {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 78vh;
+    height: 75vh;
     #map {
       margin-top: 1rem;
       width: 100%;
       height: 100%;
       z-index: 10;
     }
-    .search {
+    .map_content_search {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -278,24 +268,34 @@ export default {
           border-bottom: 1px solid colors.$danger-background;
         }
       }
-      .pagination-container {
+      .map_content_pagination {
         min-height: 40px;
       }
+    }
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  a {
+    text-align: center;
+    color: colors.$text-primary;
+    &:hover {
+      color: colors.$facebook-primary;
     }
   }
 }
 
 @include screens.tablet {
   .map {
-    h1 {
-      font-size: 2rem;
-    }
-    .search {
+    .map_content_search {
       flex-direction: row;
       justify-content: space-between;
       button {
         font-size: 1.2rem;
       }
+    }
+    h2 {
+      font-size: 2rem;
     }
   }
 }

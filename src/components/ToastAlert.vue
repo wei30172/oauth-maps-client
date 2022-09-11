@@ -22,7 +22,7 @@ export default {
 @use "../styles/mixin/colors" as colors;
 .toast-alert-container {
   z-index: 99;
-  width: 60%;
+  width: 50%;
   position: relative;
   .toast-alert {
     width: 100%;
